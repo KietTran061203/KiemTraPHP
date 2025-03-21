@@ -143,31 +143,31 @@ footer {
     </style>
 </head>
 <h1>Thêm Sinh viên</h1>
-<form method="POST">
-    <label>Mã SV:</label>
-    <input type="text" name="MaSV" required><br>
+<form action="?controller=sinhvien&action=create" method="POST" enctype="multipart/form-data">
+    <label for="MaSV">Mã sinh viên:</label>
+    <input type="text" id="MaSV" name="MaSV" required>
 
-    <label>Họ Tên:</label>
-    <input type="text" name="HoTen" required><br>
+    <label for="HoTen">Họ tên:</label>
+    <input type="text" id="HoTen" name="HoTen" required>
 
-    <label>Giới Tính:</label>
-    <input type="text" name="GioiTinh"><br>
-
-    <label>Ngày Sinh:</label>
-    <input type="date" name="NgaySinh"><br>
-
-    <label for="Hinh">Hình Ảnh:</label>
-        <input type="file" id="Hinh" name="Hinh" accept="image/*">
-    <label for="MaNganh">Ngành học:</label>
-    <select id="MaNganh" name="MaNganh" required>
-        <?php if (!empty($majors)): ?>
-            <?php foreach ($majors as $major): ?>
-                <option value="<?= $major['MaNganh'] ?>"><?= $major['TenNganh'] ?></option>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <option value="">Không có ngành học nào</option>
-        <?php endif; ?>
+    <label for="GioiTinh">Giới tính:</label>
+    <select id="GioiTinh" name="GioiTinh">
+        <option value="Nam">Nam</option>
+        <option value="Nữ">Nữ</option>
     </select>
+
+    <label for="NgaySinh">Ngày sinh:</label>
+    <input type="date" id="NgaySinh" name="NgaySinh" required>
+
+    <label for="MaNganh">Ngành học:</label>
+    <select id="MaNganh" name="MaNganh">
+        <option value="CNTT">Công nghệ thông tin</option>
+        <option value="QTKD">Quản trị kinh doanh</option>
+    </select>
+
+    <label for="Hinh">Hình ảnh:</label>
+    <input type="file" id="Hinh" name="Hinh">
 
     <button type="submit">Thêm</button>
 </form>
+

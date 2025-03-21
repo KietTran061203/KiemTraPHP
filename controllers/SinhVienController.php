@@ -8,49 +8,63 @@ class SinhVienController
         $students = SinhVien::all();
         require 'views/sinhvien/index.php';
     }
+public function login() {
+    // Hiển thị form đăng nhập
+    require 'views/sinhvien/login.php';
+}
 
-   public function create()
-{
-    global $conn;
+ public function doLogin() {
+        $username = $_POST['username'] ?? '';
+        $password = $_POST['password'] ?? '';
 
-    // Lấy danh sách ngành học từ cơ sở dữ liệu
-    $stmt = $conn->prepare("SELECT * FROM nganhhoc");
-    $stmt->execute();
-    $majors = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        // Lưu trạng thái đăng nhập (không kiểm tra username/password)
+        $_SESSION['user'] = $username;
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Xử lý dữ liệu form
-        $maSV = $_POST['MaSV'];
-        $hoTen = $_POST['HoTen'];
-        $gioiTinh = $_POST['GioiTinh'];
-        $ngaySinh = $_POST['NgaySinh'];
-        $maNganh = $_POST['MaNganh'];
-        $hinh = null;
-
-        // Xử lý file hình ảnh
-        if (!empty($_FILES['Hinh']['name'])) {
-            $hinh = 'uploads/' . basename($_FILES['Hinh']['name']);
-            move_uploaded_file($_FILES['Hinh']['tmp_name'], $hinh);
-        }
-
-        // Gọi hàm tạo sinh viên mới
-        SinhVien::create([
-            'MaSV' => $maSV,
-            'HoTen' => $hoTen,
-            'GioiTinh' => $gioiTinh,
-            'NgaySinh' => $ngaySinh,
-            'Hinh' => $hinh,
-            'MaNganh' => $maNganh
-        ]);
-
-        // Điều hướng về trang danh sách
-        header('Location: index.php');
+        // Chuyển hướng về trang danh sách sinh viên
+        header('Location: ?controller=sinhvien&action=index');
+        exit;
+    }
+    // Xử lý đăng xuất
+    public function logout() {
+        session_destroy();
+        header('Location: ?controller=sinhvien&action=login');
         exit;
     }
 
-    // Truyền danh sách ngành học xuống view
+   public function create() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $MaSV = $_POST['MaSV'] ?? null;
+        $HoTen = $_POST['HoTen'] ?? null;
+        $GioiTinh = $_POST['GioiTinh'] ?? null;
+        $NgaySinh = $_POST['NgaySinh'] ?? null;
+        $MaNganh = $_POST['MaNganh'] ?? null; // Lấy ngành học từ form
+
+        // Xử lý upload hình ảnh
+        $Hinh = null;
+        if (isset($_FILES['Hinh']) && $_FILES['Hinh']['error'] === UPLOAD_ERR_OK) {
+            $Hinh = basename($_FILES['Hinh']['name']);
+            move_uploaded_file($_FILES['Hinh']['tmp_name'], "uploads/$Hinh");
+        }
+
+        // Gọi model để thêm dữ liệu
+        SinhVien::create([
+            'MaSV' => $MaSV,
+            'HoTen' => $HoTen,
+            'GioiTinh' => $GioiTinh,
+            'NgaySinh' => $NgaySinh,
+            'MaNganh' => $MaNganh, // Truyền ngành học vào đây
+            'Hinh' => $Hinh,
+        ]);
+
+        // Chuyển hướng về danh sách sinh viên
+        header('Location: ?controller=sinhvien&action=index');
+        exit;
+    }
+
+    // Hiển thị form tạo
     require 'views/sinhvien/create.php';
 }
+
 
 
 

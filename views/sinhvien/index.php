@@ -1,5 +1,7 @@
 <h1>Danh sách Sinh viên</h1>
 <a href="?action=create">Thêm Sinh viên</a>
+<a href="?action=login" class="btn">Đăng nhập</a>
+<a href="?controller=sinhvien&action=logout" class="btn btn-danger">Đăng xuất</a>
 <head>
     <style>
        /* Global styles */

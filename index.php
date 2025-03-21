@@ -3,6 +3,13 @@
 $controller = $_GET['controller'] ?? 'sinhvien'; // Mặc định là 'sinhvien'
 $action = $_GET['action'] ?? 'index'; // Mặc định là 'index'
 $id = $_GET['id'] ?? null; // ID tùy chọn
+session_start();
+
+// Kiểm tra trạng thái đăng nhập
+if (!isset($_SESSION['user']) && !in_array($action, ['login', 'doLogin'])) {
+    header('Location: ?controller=sinhvien&action=login');
+    exit;
+}
 
 // Xác định file controller và class controller tương ứng
 $controllerFile = 'controllers/' . ucfirst($controller) . 'Controller.php';
